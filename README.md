@@ -1,4 +1,4 @@
-#CURRNT
+# CURRNT
 The Combined Utilities for River Routing Nested Together (CURRNT) is designed to
 simplify the execution of the Routing Application for Parallel computatIon of 
 Discharge (RAPID) and the Reproducible Routing Rituals (RRR) on Amazon Web
@@ -17,20 +17,22 @@ Enter the CURRNT directory:
 cd currnt/
 ```
 
-Create Docker image
+Create Docker image:
 
 ```
 docker build -t chdavid/currnt:app0 -f Dockerfile_app0 .
 ```
 
-Execute Docker image as a Docker container. The `--rm` option deletes the
-container after execution. The `-p 9000:8080` option maps Transmission Control
-Protocol (TCP) ports. In this case, the `8080` port in the Docker container is
-mapped to the `9000` port in the Docker host.
+Execute Docker image as a Docker container:
 
 ```
 docker run --rm -p 9000:8080 chdavid/currnt:app0
 ```
+
+> The `--rm` option deletes the container after execution. The `-p 9000:8080`
+> option maps Transmission Control Protocol (TCP) ports. In this case, the
+> `8080` port in the Docker container is mapped to the `9000` port in the Docker
+> host.
 
 Try it out:
 
