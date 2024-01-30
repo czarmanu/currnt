@@ -8,7 +8,7 @@
 #locally, and otherwise runs normally on AWS Lambda. This was adapted from:
 #https://docs.aws.amazon.com/lambda/latest/dg/images-test.html
 #Author:
-#AWS and Cedric H. David, 2018-2022
+#AWS and Cedric H. David, 2018-2024
 
 
 #*******************************************************************************

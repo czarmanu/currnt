@@ -5,7 +5,7 @@
 #Purpose:
 #Basic usage of AWS lambda.
 #Author:
-#Cedric H. David, 2018-2022
+#Cedric H. David, 2018-2024
 
 
 #*******************************************************************************
