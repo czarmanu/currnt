@@ -6,14 +6,13 @@
 #This file describes all the commands needed to assemble an image for app3 and
 #is used by the Docker software.
 #Author:
-#Cedric H. David, 2018-2024
-#Manu Tom, 2023-2024
+#Manu Tom, Cedric H. David, 2018-2024
 
 
 #*******************************************************************************
 #Base image
 #*******************************************************************************
-FROM debian:buster-slim
+FROM debian:11.7-slim
 
 
 #*******************************************************************************
@@ -28,9 +27,7 @@ RUN apt-get -y update && \
 #*******************************************************************************
 #Python requirements
 #*******************************************************************************
-RUN pip3 install --no-cache-dir awslambdaric
-RUN pip3 install --no-cache-dir boto3
-RUN pip3 install --no-cache-dir requests
+RUN pip3 install --no-cache-dir awslambdaric boto3 requests
 
 
 #*******************************************************************************

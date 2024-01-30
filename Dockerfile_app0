@@ -38,7 +38,7 @@ FROM public.ecr.aws/lambda/python:3.7
 #*******************************************************************************
 #Copy files into Docker image
 #*******************************************************************************
-COPY src/lambda_function.py ${LAMBDA_TASK_ROOT}
+COPY src/lambda_function_app0.py ${LAMBDA_TASK_ROOT}
 
 
 #*******************************************************************************
@@ -49,7 +49,7 @@ COPY src/lambda_function.py ${LAMBDA_TASK_ROOT}
 #*******************************************************************************
 #Default parameters, can be overridden from Docker CLI when container running
 #*******************************************************************************
-CMD [ "lambda_function.lambda_handler" ]
+CMD [ "lambda_function_app0.lambda_handler" ]
 
 
 #*******************************************************************************
