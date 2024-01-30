@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 #*******************************************************************************
-#mock_drv.py
+#drv_mck.py
 #*******************************************************************************
 
 #Purpose:
 #This program will mock some upload and download (python) drivers.
 #Authors:
-#Cedric H. David, 2023-2024
-#Manu Tom, 2023-2024
+#Manu Tom, Cedric H. David, 2023-2024
 
 
 #*******************************************************************************

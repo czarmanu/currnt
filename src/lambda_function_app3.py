@@ -5,13 +5,13 @@
 #Purpose:
 #Basic usage of a python driver (with AWS lambda and s3 storage).
 #Authors:
-#Cedric H. David, 2018-2024
-#Manu Tom, 2023-2024
+#Manu Tom, Cedric H. David, 2018-2024
+
 
 #*******************************************************************************
 #Python libraries
 #*******************************************************************************
-import mock_drv as drv
+import drv_mck as drv
 
 
 #*******************************************************************************
