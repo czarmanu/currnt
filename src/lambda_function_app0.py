@@ -3,7 +3,7 @@
 #*******************************************************************************
 
 #Purpose:
-#Basic usage of AWS lambda.
+#Learn how to use Lambda approach (locally, AWS).
 #Author:
 #Cedric H. David, Manu Tom, 2018-2024
 
