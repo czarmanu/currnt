@@ -3,19 +3,20 @@
 #*******************************************************************************
 
 #Purpose:
-#Basic usage of AWS lambda.
+#Learn how to use Lambda approach (locally, AWS), but
+#with a preferred base image
 #Author:
-#Cedric H. David, 2018-2024
+#Cedric H. David, Manu Tom, 2018-2024
 
 
 #*******************************************************************************
 #Example invocation
 #*******************************************************************************
 #{
-#     "LSM": "VIC",
-#     "MH07B01_pfaf2": "74"
-#     "ISO_str": "2000-01-01T00:00:00"
-#     "ISO_end": "2000-01-02T00:00:00"
+#     "basin_id": "74",
+#     "lsm_mod": "VIC"
+#     "yyyy_mm": "2000-01"
+#     "s3_name": "currnt-data"
 #}
 
 
@@ -23,7 +24,7 @@
 #lambda_handler
 #*******************************************************************************
 def lambda_handler(event, context):
-    message = event['LSM']
+    message = event['basin_id']
     return { 
         'message' : message
     }
