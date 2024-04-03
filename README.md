@@ -40,7 +40,6 @@ Try it out:
 
 ```
 curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{"basin_id":"74", "lsm_mod":"VIC", "s3_name":"currnt-data", "yyyy_mm":"2000-01"}'
-curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{"LSM":"VIC"}'
 curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{"S3_BUCKET_NAME":"yourBucketName", "FILENAME_UPLOAD":"inputs.txt", "FILENAME_DOWNLOAD":"yourFilename.txt"}'
 curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{"S3_BUCKET_NAME":"yourBucketName", "FILENAME_UPLOAD":"lambda_function_app3.py", "FILENAME_DOWNLOAD":"yourFilename.py", "FILE_URL":"https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg"}'
 curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{"LSMexp":"GLDAS", "LSM":"VIC", "LSMres":"3H", "month":"2001-01"}'
