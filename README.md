@@ -27,8 +27,8 @@ Execute Docker image as a Docker container:
 
 ```
 docker run --rm -p 9000:8080 chdavid/currnt:app0
+docker run -e EARTHDATA_USERNAME="yourEarthDataUserName" -e EARTHDATA_PASSWORD="yourEarthDataPassword" --rm -p 9000:8080 currnt:app3
 docker run -e AWS_ACCESS_KEY_ID="yourKeyID" -e AWS_SECRET_ACCESS_KEY="yourSecretAccessKey" --rm -p 9000:8080 chdavid/currnt:app2
-docker run -e EARTHDATA_USERNAME="yourEarthDataUserName" -e EARTHDATA_PASSWORD="yourEarthDataPassword" --rm -p 9000:8080 currnt:app4
 ```
 
 > The `--rm` option deletes the container after execution. The `-p 9000:8080`
