@@ -6,7 +6,7 @@
 #Purpose:
 #Python drivers to
 # 1) print a message as standard output.
-# 2) Download GLDAS_VIC_3H data (10 files) using Earthaccess library.
+# 2) Download a file (GLDAS_VIC_3H) using Earthaccess library.
 #Authors:
 #Manu Tom, Cedric H. David, 2018-2024
 
@@ -25,7 +25,7 @@ def drv_hel(message):
      
 
 #*******************************************************************************
-#Driver to download from Earthdata
+#Driver for downloading a file to /tmp from Earthdata
 #*******************************************************************************
 def drv_dwn_ED(yyyy_mm):
     #***************************************************************************
@@ -33,7 +33,6 @@ def drv_dwn_ED(yyyy_mm):
     #***************************************************************************
     date_beg = yyyy_mm+"-01T00:00:00"# eg. "2000-01-01T00:00:00"
     date_end = date_beg.split("-")[0]+"-"+str(int(date_beg.split("-")[1])+1).zfill(2)# eg. "2000-02-01T00:00:00"
-    
     
     #***************************************************************************
     #search for LDAS data
@@ -43,9 +42,8 @@ def drv_dwn_ED(yyyy_mm):
         cloud_hosted=True,
         bounding_box=(-180,-60,180,90),
         temporal=(date_beg, date_end),
-        count=10 
+        count=1 
         )
-
 
     #***************************************************************************
     #make folder, download files, list files downloaded
@@ -56,12 +54,13 @@ def drv_dwn_ED(yyyy_mm):
     files = earthaccess.download(results, dwnld_fldr)
     print("Files downloaded: ", files)
     
-    
     #***************************************************************************
     #check downloaded files
     #***************************************************************************
     result_chk_dwnld = subprocess.run(["ls", "-lR", "/tmp"], capture_output=True, text=True)
     print("Checking download folder contents:\n", result_chk_dwnld.stdout)
+    
+    return files[0]
     
     
 #*******************************************************************************

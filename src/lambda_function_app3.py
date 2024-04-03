@@ -3,8 +3,8 @@
 #*******************************************************************************
 
 #Purpose:
-#Use a python driver and download files using Earthaccess library
-#to /tmp/ using EarthData credentials.
+#Use a python driver and download files from Earthdata
+#to /tmp/ using credentials.
 #Authors:
 #Manu Tom, Cedric H. David, 2018-2024
 
@@ -32,14 +32,14 @@ import drv_all as drv
 def lambda_handler(event, context):
     yyyy_mm = event['yyyy_mm']
     
-    
     #***************************************************************************
     #invoke driver
     #*************************************************************************** 
-    drv.drv_dwn_ED(yyyy_mm)
+    filename = drv.drv_dwn_ED(yyyy_mm)
     
+    message  = 'Dowloaded file: {}'.format(filename)
     return { 
-        'GLDAS VIC 3H data download from Earthdata succesful for ' : yyyy_mm
+        'Success: ' : message
     }
 
 
