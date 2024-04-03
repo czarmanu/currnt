@@ -27,7 +27,7 @@ RUN apt-get -y update && \
 #*******************************************************************************
 #Python requirements
 #*******************************************************************************
-RUN pip3 install --no-cache-dir awslambdaric boto3 requests
+RUN pip3 install --no-cache-dir awslambdaric earthaccess
 
 
 #*******************************************************************************
@@ -50,7 +50,7 @@ COPY entry_script.sh /entry_script.sh
 #Copy files into Docker image
 #*******************************************************************************
 COPY src/lambda_function_app3.py ${LAMBDA_TASK_ROOT}
-COPY drv/mock_drv.py ${LAMBDA_TASK_ROOT}
+COPY drv/drv_all.py ${LAMBDA_TASK_ROOT}
 
 
 #*******************************************************************************

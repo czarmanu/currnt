@@ -3,51 +3,43 @@
 #*******************************************************************************
 
 #Purpose:
-#Basic usage of a python driver (with AWS lambda and s3 storage).
+#Use a python driver and download files using Earthaccess library
+#to /tmp/ using EarthData credentials.
 #Authors:
 #Manu Tom, Cedric H. David, 2018-2024
 
 
 #*******************************************************************************
-#Python libraries
+#Example invocation
 #*******************************************************************************
-import drv_mck as drv
+#{
+#     "basin_id": "74",
+#     "lsm_mod": "VIC"
+#     "yyyy_mm": "2000-01"
+#     "s3_name": "currnt-data"
+#}
+
+
+#*******************************************************************************
+#Import libraries
+#*******************************************************************************
+import drv_all as drv
 
 
 #*******************************************************************************
 #lambda handler
 #*******************************************************************************
 def lambda_handler(event, context):
-    #***************************************************************************
-    #input parameters as events
-    #***************************************************************************
-    #s3 bucket
-    S3_BUCKET = event['S3_BUCKET_NAME']
+    yyyy_mm = event['yyyy_mm']
     
-    #for file upload and download ( /var/task <--> s3 )
-    FILENAME_UPLD = event['FILENAME_UPLOAD']
-    FILENAME_DWNLD = event['FILENAME_DOWNLOAD']
-    
-    #for file upload to s3 from URL
-    FILE_URL = event['FILE_URL']
-	
     
     #***************************************************************************
-    #invoke drivers
+    #invoke driver
     #*************************************************************************** 
-    #driver to upload a file from /var/task to s3 bucket
-    drv.drv_upld(S3_BUCKET, FILENAME_UPLD)
+    drv.drv_dwn_ED(yyyy_mm)
     
-    #driver to download a file from s3 bucket to /var/task
-    drv.drv_dwnld(S3_BUCKET, FILENAME_UPLD, FILENAME_DWNLD)
-    
-    #driver to upload a file from URL to s3 bucket
-    drv.drv_upld_from_url(S3_BUCKET, FILE_URL)
-
-    message  = 'successful'
-
     return { 
-        'Upload and Download' : message
+        'GLDAS VIC 3H data download from Earthdata succesful for ' : yyyy_mm
     }
 
 
