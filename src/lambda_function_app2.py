@@ -3,35 +3,41 @@
 #*******************************************************************************
 
 #Purpose:
-#Basic usage of AWS lambda and s3 storage.
+#Basic usage of a python driver to print basin ID.
 #Authors:
 #Manu Tom, Cedric H. David, 2018-2024
 
 
 #*******************************************************************************
-#Python libraries
+#Example invocation
 #*******************************************************************************
-import boto3
+#{
+#     "basin_id": "74",
+#     "lsm_mod": "VIC"
+#     "yyyy_mm": "2000-01"
+#     "s3_name": "currnt-data"
+#}
+
+
+#*******************************************************************************
+#Import libraries
+#*******************************************************************************
+import drv_app2 as drv
 
 
 #*******************************************************************************
 #lambda handler
 #*******************************************************************************
 def lambda_handler(event, context):
-    S3_BUCKET = event['S3_BUCKET_NAME']
-    FILENAME_UPLD = event['FILENAME_UPLOAD']
-    FILENAME_DWNLD = event['FILENAME_DOWNLOAD']
-	
-    #s3 bucket interface
-    s3 = boto3.resource('s3')
+    message = event['basin_id']
     
-    #sample upload and download 
-    s3.Bucket(S3_BUCKET).upload_file(FILENAME_UPLD, FILENAME_UPLD)
-    s3.Bucket(S3_BUCKET).download_file(FILENAME_UPLD, FILENAME_DWNLD)
-
-    message  = 'Uploaded the file <{}> to S3 bucket <{}> and downloaded the same as <{}> to </var/task>'.format(event['FILENAME_UPLOAD'], event['S3_BUCKET_NAME'], event['FILENAME_DOWNLOAD'])
+    #***************************************************************************
+    #invoke driver
+    #*************************************************************************** 
+    drv.drv_hel(message)
+    
     return { 
-        'Success' : message
+        'message' : message
     }
 
 

@@ -1,10 +1,12 @@
 #*******************************************************************************
-#lambda_function_app3.py
+#lambda_function_app5.py
 #*******************************************************************************
 
 #Purpose:
-#Use a python driver and download files from Earthdata
-#to /tmp/ using credentials.
+#Use a python driver to:
+# 1) download a file to /tmp/ using Earthaccess library (uisng credentials))
+# 2) upload the same file to s3 bucket using s3 credentials.
+# 3) download the same file from s3 bucket to /tmp folder.
 #Authors:
 #Manu Tom, Cedric H. David, 2018-2024
 
@@ -23,7 +25,7 @@
 #*******************************************************************************
 #Import libraries
 #*******************************************************************************
-import drv_app3 as drv
+import drv_app5 as drv
 
 
 #*******************************************************************************
@@ -31,13 +33,17 @@ import drv_app3 as drv
 #*******************************************************************************
 def lambda_handler(event, context):
     yyyy_mm = event['yyyy_mm']
+    s3_bucket_name = event['s3_name']
+    
     
     #***************************************************************************
-    #invoke driver
+    #invoke drivers
     #*************************************************************************** 
-    filename = drv.drv_dwn_ED(yyyy_mm)
+    file = drv.drv_dwn_ED(yyyy_mm)
+    drv.drv_upl_S3(s3_bucket_name, file)
+    drv.drv_dwn_S3(s3_bucket_name, file)
     
-    message  = 'Dowloaded file: {}'.format(filename)
+    message  = 'Downloaded the file from {} as {}, uploaded it to the S3 bucket {}, and re-downloaded it'.format(yyyy_mm, file, s3_bucket_name)
     return { 
         'Success: ' : message
     }
