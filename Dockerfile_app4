@@ -6,7 +6,7 @@
 #This file describes all the commands needed to assemble an image for app4 and
 #is used by the Docker software.
 #Author:
-#ManuTom, Cedric H. David, 2018-2024
+#Manu Tom, Cedric H. David, 2018-2024
 
 
 #*******************************************************************************
@@ -28,6 +28,7 @@ RUN apt-get -y update && \
 #Python requirements
 #*******************************************************************************
 RUN pip3 install --no-cache-dir awslambdaric earthaccess
+RUN pip3 install --no-cache-dir boto3
 
 
 #*******************************************************************************
@@ -50,6 +51,7 @@ COPY entry_script.sh /entry_script.sh
 #Copy files into Docker image
 #*******************************************************************************
 COPY src/lambda_function_app4.py ${LAMBDA_TASK_ROOT}
+COPY drv/drv_app4.py ${LAMBDA_TASK_ROOT}
 
 
 #*******************************************************************************
