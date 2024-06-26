@@ -93,7 +93,11 @@ jobs:
               file: Dockerfile_${{ matrix.app }}
               tags: |
                  ${{ secrets.DOCKER_HUB_NAME }}/currnt:${{ matrix.app }}-latest
-                 ${{ secrets.DOCKER_HUB_NAME }}/currnt:${{ matrix.app }}-${{ github.ref_name }}
+                 #Example: chdavid/currnt:app0-latest
+                 ${{ github.ref_name != 'main' && aformat('{0}/currnt:{1}-{2}', secrets.DOCKER_HUB_NAME, matrix.app, github.ref_name) || null }}
+                 #Example: chdavid/currnt:app0-20240101
+                 #But not: chdavid/currnt:app0-main
+                 #${{ expression && tag || null}}
 
 
 #*******************************************************************************
