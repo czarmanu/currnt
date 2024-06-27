@@ -39,6 +39,10 @@ jobs:
             include:
                - app: "app0"
                - app: "app1"
+               - app: "app2"
+               - app: "app3"
+               - app: "app4"
+               - app: "app5"
       steps:
 
       #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -92,8 +96,8 @@ jobs:
               platforms: linux/amd64,linux/arm64
               file: Dockerfile_${{ matrix.app }}
               tags: |
-                 ${{ secrets.DOCKER_HUB_NAME }}/currnt:${{ matrix.app }}-latest
                  ${{ github.ref_name != 'main' && format('{0}/currnt:{1}-{2}', secrets.DOCKER_HUB_NAME, matrix.app, github.ref_name) || null }}
+                 ${{ secrets.DOCKER_HUB_NAME }}/currnt:${{ matrix.app }}-latest
 
 
 #*******************************************************************************
