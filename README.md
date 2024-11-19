@@ -1,4 +1,8 @@
 # CURRNT
+[![License (3-Clause BSD)](https://img.shields.io/badge/license-BSD%203--Clause-yellow.svg)](https://github.com/c-h-david/currnt/blob/main/LICENSE)
+
+[![Docker Images](https://img.shields.io/badge/docker-images-blue?logo=docker)](https://hub.docker.com/r/chdavid/currnt/tags)
+
 The Combined Utilities for River Routing Nested Together (CURRNT) is designed to
 simplify the execution of the Routing Application for Parallel computatIon of 
 Discharge (RAPID) and the Reproducible Routing Rituals (RRR) on Amazon Web
