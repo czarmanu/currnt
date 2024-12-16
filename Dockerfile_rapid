@@ -1,0 +1,122 @@
+# ****************************************************************************
+# Dockerfile_rapid
+# ****************************************************************************
+
+# Purpose:
+# This file describes all the commands needed to assemble an image for 
+# running RAPID on the AWS cloud using Lambda service and is used by the
+# Docker software.
+# Authors:
+# Manu Tom, Cedric H. David, 2023-2024
+
+# ****************************************************************************
+# Base image
+# ****************************************************************************
+FROM czarmanu/rapid:latest
+
+
+# ****************************************************************************
+# Operating System Requirements
+# ****************************************************************************
+RUN apt-get -y update && \
+    apt-get install -y python3-pip && \
+    apt-get install -y --no-install-recommends \
+        cmake \
+        autoconf \
+        automake \
+        libtool && \
+    rm -rf /var/lib/apt/lists/*
+
+
+# ****************************************************************************
+# Python requirements
+# ****************************************************************************
+RUN pip3 install --no-cache-dir awslambdaric boto3
+# Needed only for the one-time job (Qinit creation for 1980-01)
+RUN pip3 install --no-cache-dir netCDF4
+
+
+# ****************************************************************************
+# AWS Lambda specific directories
+# ****************************************************************************
+ARG LAMBDA_TASK_ROOT="/var/task"
+WORKDIR ${LAMBDA_TASK_ROOT}
+
+
+# ****************************************************************************
+# AWS Lambda Runtime Interface Emulator (RIE)
+# ****************************************************************************
+ARG AWS_RIE_URL="https://github.com/aws/aws-lambda-runtime-interface-emulator"
+ADD ${AWS_RIE_URL}/releases/latest/download/aws-lambda-rie \
+        /usr/bin/aws-lambda-rie
+RUN chmod a+x /usr/bin/aws-lambda-rie
+COPY entry_script.sh /entry_script.sh
+
+
+# ****************************************************************************
+# Copy files into Docker image
+# ****************************************************************************
+COPY src/lambda_function_rapid.py ${LAMBDA_TASK_ROOT}
+COPY drv/drv_rapid.py ${LAMBDA_TASK_ROOT}
+RUN cp /home/rapid/drv/drv_MERIT_Hydro_v07_Basins_v01_GLDAS_v20.py \
+    ${LAMBDA_TASK_ROOT}
+RUN cp /home/rapid/src/rapid ${LAMBDA_TASK_ROOT}
+
+
+# ****************************************************************************
+# Define the list of basin IDs
+# ****************************************************************************
+ARG BASIN_IDS="74"
+
+
+# ****************************************************************************
+# Iterate over each basin ID and add corresponding files to the image
+# ****************************************************************************
+ARG REPO_URL="https://zenodo.org/records/8264511/files"
+RUN set -eux; \
+    for basin_id in ${BASIN_IDS}; do \
+        RAPID_INP_DIR="/rapid/input/pfaf_${basin_id}"; \
+        mkdir -p ${RAPID_INP_DIR}; \
+        chmod -R 777 ${RAPID_INP_DIR}; \
+        while true; do \
+            wget -O ${RAPID_INP_DIR}/k_pfaf_${basin_id}_hig.csv \
+		${REPO_URL}/k_pfaf_${basin_id}_hig.csv && \
+            wget -O ${RAPID_INP_DIR}/k_pfaf_${basin_id}_low.csv \
+		${REPO_URL}/k_pfaf_${basin_id}_low.csv && \
+            wget -O ${RAPID_INP_DIR}/k_pfaf_${basin_id}_nrm.csv \
+		${REPO_URL}/k_pfaf_${basin_id}_nrm.csv && \
+            wget -O ${RAPID_INP_DIR}/x_pfaf_${basin_id}_hig.csv \
+		${REPO_URL}/x_pfaf_${basin_id}_hig.csv && \
+            wget -O ${RAPID_INP_DIR}/x_pfaf_${basin_id}_low.csv \
+		${REPO_URL}/x_pfaf_${basin_id}_low.csv && \
+            wget -O ${RAPID_INP_DIR}/x_pfaf_${basin_id}_nrm.csv \
+		${REPO_URL}/x_pfaf_${basin_id}_nrm.csv && \
+            wget -O ${RAPID_INP_DIR}/kfac_pfaf_${basin_id}_1km_hour.csv \
+		${REPO_URL}/kfac_pfaf_${basin_id}_1km_hour.csv && \
+            wget -O ${RAPID_INP_DIR}/rapid_connect_pfaf_${basin_id}.csv \
+		${REPO_URL}/rapid_connect_pfaf_${basin_id}.csv && \
+            wget -O ${RAPID_INP_DIR}/riv_bas_id_pfaf_${basin_id}_topo.csv \
+		${REPO_URL}/riv_bas_id_pfaf_${basin_id}_topo.csv && \
+            break; \
+            sleep 5; \
+        done; \
+    done;
+
+
+# ****************************************************************************
+# Default parameters, cannot be overridden from Docker CLI
+# when container running
+# ****************************************************************************
+ENTRYPOINT [ "/entry_script.sh" ]
+
+
+# ****************************************************************************
+# Default parameters, can be overridden from Docker CLI when container running
+# ****************************************************************************
+CMD [ "lambda_function_rapid.lambda_handler" ]
+
+
+# ****************************************************************************
+# End
+#**************************************************************************
+

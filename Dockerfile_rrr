@@ -1,0 +1,119 @@
+# *****************************************************************************
+# Dockerfile_rrr
+# *****************************************************************************
+
+# Purpose:
+# This file describes all the commands needed to run RRR for 1 basin, 1 month
+# Authors:
+# Manu Tom, Cedric H. David, 2018-24
+
+
+# *****************************************************************************
+# Base image
+# *****************************************************************************
+FROM czarmanu/rrr:latest
+
+
+# *****************************************************************************
+# Operating System Requirements
+# *****************************************************************************
+RUN apt-get -y update && \
+    apt-get install -y python3-pip && \
+    apt-get install -y --no-install-recommends \
+        cmake \
+        autoconf \
+        automake \
+        libtool && \
+    rm -rf /var/lib/apt/lists/*
+
+
+#******************************************************************************
+# Python requirements
+# *****************************************************************************
+RUN pip3 install --no-cache-dir awslambdaric earthaccess
+RUN pip3 install --no-cache-dir boto3
+
+# Downgrade numpy to a version below 2.0 to ensure compatibility
+RUN pip3 install --no-cache-dir "numpy<2"
+
+
+# *****************************************************************************
+# Increase timeout from 300s (default) to 15 minutes
+#******************************************************************************
+# ENV variable overrides this on cloud
+ENV AWS_LAMBDA_FUNCTION_TIMEOUT 900 
+
+
+# *****************************************************************************
+# AWS Lambda specific directories
+# *****************************************************************************
+ARG LAMBDA_TASK_ROOT="/var/task"
+WORKDIR ${LAMBDA_TASK_ROOT}
+
+
+# *****************************************************************************
+# AWS Lambda Runtime Interface Emulator (RIE)
+# *****************************************************************************
+ARG AWS_RIE_URL="https://github.com/aws/aws-lambda-runtime-interface-emulator"
+ADD ${AWS_RIE_URL}/releases/latest/download/aws-lambda-rie \
+	/usr/bin/aws-lambda-rie
+RUN chmod a+x /usr/bin/aws-lambda-rie
+COPY entry_script.sh /entry_script.sh
+
+
+# *****************************************************************************
+# Copy files into Docker image
+# *****************************************************************************
+COPY src/lambda_function_rrr.py ${LAMBDA_TASK_ROOT}
+RUN cp /home/rrr/drv/rrr_drv_MERIT_Hydro_v07_Basins_v01_GLDAS_v20.py \
+    ${LAMBDA_TASK_ROOT}
+COPY drv/drv_rrr.py ${LAMBDA_TASK_ROOT}
+COPY version.sh "/var"
+RUN cp -r /home/rrr/src /var
+
+
+# *****************************************************************************
+# Define the list of basin IDs
+# *****************************************************************************
+ARG BASIN_IDS="74"
+
+
+# *****************************************************************************
+# Iterate over each basin ID and add corresponding files
+# *****************************************************************************
+ARG REPO_URL="https://zenodo.org/records/8264511/files"
+RUN set -eux; \
+    for basin_id in ${BASIN_IDS}; do \
+        RRR_INP_DIR="/rrr/input/pfaf_${basin_id}"; \
+        mkdir -p ${RRR_INP_DIR}; \
+        chmod -R 777 ${RRR_INP_DIR}; \
+        while true; do \
+	    wget -O ${RRR_INP_DIR}/rapid_connect_pfaf_${basin_id}.csv \
+		${REPO_URL}/rapid_connect_pfaf_${basin_id}.csv && \
+	    wget -O ${RRR_INP_DIR}/coords_pfaf_${basin_id}.csv \
+    		${REPO_URL}/coords_pfaf_${basin_id}.csv && \
+	    wget -O ${RRR_INP_DIR}/rapid_coupling_pfaf_${basin_id}_GLDAS.csv \
+		${REPO_URL}/rapid_coupling_pfaf_${basin_id}_GLDAS.csv && \
+            break; \
+            sleep 5; \
+        done; \
+    done;
+
+
+# *****************************************************************************
+# Default parameters, cannot be overridden from Docker CLI 
+# when container running
+# *****************************************************************************
+ENTRYPOINT [ "/entry_script.sh" ]
+
+
+# *****************************************************************************
+# Default parameters, can be overridden from Docker CLI when container running
+# *****************************************************************************
+CMD [ "lambda_function_rrr.lambda_handler" ]
+
+
+# *****************************************************************************
+# End
+# *****************************************************************************
+
