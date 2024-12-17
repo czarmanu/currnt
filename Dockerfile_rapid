@@ -31,9 +31,9 @@ RUN apt-get -y update && \
 # ****************************************************************************
 # Python requirements
 # ****************************************************************************
-RUN pip3 install --no-cache-dir awslambdaric==3.0.0 earthaccess==0.11.0
+RUN pip3 install --no-cache-dir awslambdaric==3.0.0 earthaccess==0.11.0 && \
+    pip3 install --no-cache-dir netCDF4==1.7.2
 # Needed only for the one-time job (Qinit creation for 1980-01)
-RUN pip3 install --no-cache-dir netCDF4==1.7.2
 
 
 # ****************************************************************************
@@ -59,8 +59,8 @@ COPY entry_script.sh /entry_script.sh
 COPY src/lambda_function_rapid.py ${LAMBDA_TASK_ROOT}
 COPY drv/drv_rapid.py ${LAMBDA_TASK_ROOT}
 RUN cp /home/rapid/drv/drv_MERIT_Hydro_v07_Basins_v01_GLDAS_v20.py \
-    ${LAMBDA_TASK_ROOT}
-RUN cp /home/rapid/src/rapid ${LAMBDA_TASK_ROOT}
+    ${LAMBDA_TASK_ROOT} && \
+    cp /home/rapid/src/rapid ${LAMBDA_TASK_ROOT}
 
 
 # ****************************************************************************
