@@ -44,6 +44,8 @@ jobs:
           - app: "app3"
           - app: "app4"
           - app: "app5"
+          - app: "rrr"
+          - app: "rapid"
     steps:
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
