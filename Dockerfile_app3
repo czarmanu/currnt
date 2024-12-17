@@ -27,7 +27,7 @@ RUN apt-get -y update && \
 #*******************************************************************************
 #Python requirements
 #*******************************************************************************
-RUN pip3 install --no-cache-dir awslambdaric earthaccess
+RUN pip3 install --no-cache-dir awslambdaric==3.0.0 earthaccess==0.11.0
 
 
 #*******************************************************************************

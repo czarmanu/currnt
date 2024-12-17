@@ -31,9 +31,9 @@ RUN apt-get -y update && \
 # ****************************************************************************
 # Python requirements
 # ****************************************************************************
-RUN pip3 install --no-cache-dir awslambdaric boto3
+RUN pip3 install --no-cache-dir awslambdaric==3.0.0 earthaccess==0.11.0
 # Needed only for the one-time job (Qinit creation for 1980-01)
-RUN pip3 install --no-cache-dir netCDF4
+RUN pip3 install --no-cache-dir netCDF4==1.7.2
 
 
 # ****************************************************************************
