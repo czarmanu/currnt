@@ -54,9 +54,7 @@ WORKDIR ${LAMBDA_TASK_ROOT}
 # *****************************************************************************
 # AWS Lambda Runtime Interface Emulator (RIE)
 # *****************************************************************************
-ARG AWS_RIE_URL="https://github.com/aws/aws-lambda-runtime-interface-emulator"
-ADD ${AWS_RIE_URL}/releases/latest/download/aws-lambda-rie \
-	/usr/bin/aws-lambda-rie
+ADD https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie /usr/bin/aws-lambda-rie
 RUN chmod a+x /usr/bin/aws-lambda-rie
 COPY entry_script.sh /entry_script.sh
 
@@ -85,15 +83,15 @@ ARG REPO_URL="https://zenodo.org/records/8264511/files"
 RUN set -eux; \
     for basin_id in ${BASIN_IDS}; do \
         RRR_INP_DIR="/rrr/input/pfaf_${basin_id}"; \
-        mkdir -p ${RRR_INP_DIR}; \
-        chmod -R 777 ${RRR_INP_DIR}; \
+        mkdir -p "${RRR_INP_DIR}"; \
+        chmod -R 777 "${RRR_INP_DIR}"; \
         while true; do \
-	    wget -O ${RRR_INP_DIR}/rapid_connect_pfaf_${basin_id}.csv \
-		${REPO_URL}/rapid_connect_pfaf_${basin_id}.csv && \
-	    wget -O ${RRR_INP_DIR}/coords_pfaf_${basin_id}.csv \
-    		${REPO_URL}/coords_pfaf_${basin_id}.csv && \
-	    wget -O ${RRR_INP_DIR}/rapid_coupling_pfaf_${basin_id}_GLDAS.csv \
-		${REPO_URL}/rapid_coupling_pfaf_${basin_id}_GLDAS.csv && \
+	    wget -nv -P "${RRR_INP_DIR}" \
+		"${REPO_URL}/rapid_connect_pfaf_${basin_id}.csv" && \
+	    wget -nv -P "${RRR_INP_DIR}" \
+    		"${REPO_URL}/coords_pfaf_${basin_id}.csv" && \
+	    wget -nv -P "${RRR_INP_DIR}" \
+		"${REPO_URL}/rapid_coupling_pfaf_${basin_id}_GLDAS.csv" && \
             break; \
             sleep 5; \
         done; \
