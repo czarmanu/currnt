@@ -19,7 +19,7 @@ FROM czarmanu/rapid:latest
 # Operating System Requirements
 # ****************************************************************************
 RUN apt-get -y update && \
-    apt-get install -y python3-pip && \
+    apt-get install -y --no-install-recommends python3-pip && \
     apt-get install -y --no-install-recommends \
         cmake \
         autoconf \
