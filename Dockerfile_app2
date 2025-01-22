@@ -19,7 +19,7 @@ FROM debian:11.7-slim
 #Operating System Requirements
 #*******************************************************************************
 RUN apt-get -y update && \
-    apt-get install -y python3-pip && \
+    apt-get install -y --no-install-recommends python3-pip && \
     apt-get install -y --no-install-recommends cmake autoconf automake libtool && \
     rm -rf /var/lib/apt/lists/*
 
@@ -27,7 +27,7 @@ RUN apt-get -y update && \
 #*******************************************************************************
 #Python requirements
 #*******************************************************************************
-RUN pip3 install --no-cache-dir awslambdaric
+RUN pip3 install --no-cache-dir awslambdaric==3.0.0
 
 
 #*******************************************************************************
