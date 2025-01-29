@@ -6,7 +6,7 @@
 # Purpose:
 # Factory function to run batch rapid simulations
 # Authors:
-# Manu Tom, Cedric H. David, 2023-2024
+# Manu Tom, Cedric H. David, 2023-2025
 
 import subprocess
 import logging
@@ -18,26 +18,19 @@ log_file_path = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                              'logs_rapid_simulations.txt'))
 logging.basicConfig(filename=log_file_path, level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
-
 # Define the start and end years
-start_year = 1980
-end_year = 2014
-
+start_year = 1981
+end_year = 1981
 # Months to process
 months = ["01", "02", "03", "04", "05", "06",
           "07", "08", "09", "10", "11", "12"]
-
 # LSM experiments to consider
 lsm_exps = ["GLDAS"]
-
 # always 3H for rapid
 lsm_stps = ["3H"]
-
 basin_ids = ["74"]
-
 # AWS S3 bucket name
 bucket_name = "currnt-data"
-
 # Time to wait between retries (in seconds)
 retry_interval = 10
 
@@ -71,15 +64,12 @@ def process_files(basin_id, year, month, lsm_exp, lsm_mod, lsm_stp):
         f"m3_riv_pfaf_{basin_id}_{lsm_exp}_{lsm_mod}_"
         f"{lsm_stp}_{year}-{month}_utc.nc4"
         )
-
     qout_file_path = (
         f"pfaf_{basin_id}/{lsm_exp}/{lsm_mod}/{lsm_stp}/{year}-{month}/"
         f"Qout_pfaf_{basin_id}_{lsm_exp}_{lsm_mod}_{lsm_stp}_{year}-{month}.nc"
         )
-
     m3_exists = check_file_exists(bucket_name, m3_file_path)
     qout_exists = check_file_exists(bucket_name, qout_file_path)
-
     if m3_exists and not qout_exists:
         message = (
             f"Processing files for {year}-{month}, Basin ID: {basin_id}, "
@@ -89,7 +79,6 @@ def process_files(basin_id, year, month, lsm_exp, lsm_mod, lsm_stp):
             )
         logging.info(message)
         print(message)
-
         command = (
             "awscurl --region us-west-2 --service execute-api "
             "--profile saml-pub -X POST "
@@ -105,7 +94,6 @@ def process_files(basin_id, year, month, lsm_exp, lsm_mod, lsm_stp):
         process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE)
         output, error = process.communicate()
-
         if error:
             error_message = (
                 f"Error processing files for {year}-{month}: "
@@ -115,7 +103,6 @@ def process_files(basin_id, year, month, lsm_exp, lsm_mod, lsm_stp):
             print(error_message)
         else:
             print("Output:", output.decode())
-
     elif not m3_exists:
         warning_message = (
             f"m3 file does not exist for {year}-{month}, "
@@ -154,7 +141,6 @@ def get_lsm_mods(lsm_exp):
 # Multi-year simulations
 # *****************************************************************************
 max_retry_attempts = 25  # Define a maximum number of retry attempts
-
 try:
     for basin_id in basin_ids:
         for lsm_exp in lsm_exps:
@@ -175,7 +161,6 @@ try:
                                     f"{basin_id}_{lsm_exp}_{lsm_mod}_"
                                     f"{lsm_stp}_{year}-{month}.nc"
                                 )
-
                                 retry_count = 0  # Initialize retry count
                                 while (
                                     retry_count < max_retry_attempts and
@@ -193,7 +178,6 @@ try:
                                     print(message)  # Print the message
                                     time.sleep(retry_interval)
                                     retry_count += 1
-
                                 if retry_count == max_retry_attempts:
                                     error_message = (
                                         f"Max retry attempts reached for "
@@ -208,10 +192,10 @@ try:
                                         basin_id, year, month, lsm_exp,
                                         lsm_mod, lsm_stp
                                     )
-
 except TokenExpiredException as e:
     logging.error(str(e))
     print(str(e))
+
 
 # *****************************************************************************
 # End
