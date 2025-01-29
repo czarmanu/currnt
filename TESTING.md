@@ -34,7 +34,9 @@ yamllint .github/workflows/*.yml .*.yml
 We use `hadolint` to lint our Dockerfiles.
 
 ```bash
-hadolint --ignore DL3008 --ignore SC2046 Dockerfile
+for file in Dockerfile*; do
+    hadolint --ignore DL3008 --ignore SC2046 "$file"
+done
 ```
 
 > `hadolint` does not allow to enforce a maximum line width, but we try to keep
