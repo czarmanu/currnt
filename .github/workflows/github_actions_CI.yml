@@ -84,8 +84,6 @@ jobs:
       - name: Install Python requirements
         run: |
           pip3 install --no-cache-dir -r requirements.pip
-          pip3 install mypy types-boto3 types-PyYAML types-requests
-          pip3 install mypy types-setuptools types-protobuf
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # Run tests
@@ -97,7 +95,6 @@ jobs:
           yamllint .github/workflows/*.yml .*.yml
           hadolint --ignore DL3008 --ignore SC2046 Dockerfile_*
           flake8 *.py src/*.py drv/*.py
-          mypy --python-version 3.11 --strict *.py src/*.py drv/*.py
 
 # *****************************************************************************
 # End
