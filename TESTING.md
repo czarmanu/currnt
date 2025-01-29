@@ -52,13 +52,7 @@ flake8 *.py src/*.py drv/*.py
 
 > The maximum line width is 79 characters by default.
 
-### Python type checker
 
-We use `mypy` to dynamic typing and static typing.
-
-```bash
-mypy --strict *.py src/*.py drv/*.py
-```
 
 [URL_CFG_MD]: https://github.com/c-h-david/rapid2/blob/main/.pymarkdown.yml
 [URL_CFG_YM]: https://github.com/c-h-david/rapid2/blob/main/.yamllint.yml
