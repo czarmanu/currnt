@@ -5,7 +5,7 @@
 # Purpose:
 # This file describes all the commands needed to run RRR for 1 basin, 1 month
 # Authors:
-# Manu Tom, Cedric H. David, 2018-24
+# Manu Tom, Cedric H. David, 2018-25
 
 
 # *****************************************************************************
@@ -64,10 +64,10 @@ COPY entry_script.sh /entry_script.sh
 # *****************************************************************************
 COPY src/lambda_function_rrr.py ${LAMBDA_TASK_ROOT}
 RUN cp /home/rrr/drv/rrr_drv_MERIT_Hydro_v07_Basins_v01_GLDAS_v20.py \
-    ${LAMBDA_TASK_ROOT}
+    ${LAMBDA_TASK_ROOT} \
+    && cp /home/rrr/version.sh /var \
+    && cp -r /home/rrr/src /var
 COPY drv/drv_rrr.py ${LAMBDA_TASK_ROOT}
-COPY version.sh "/var"
-RUN cp -r /home/rrr/src /var
 
 
 # *****************************************************************************
