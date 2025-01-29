@@ -1,12 +1,16 @@
 # CURRNT
 
-[![License (3-Clause BSD)](https://img.shields.io/badge/license-BSD%203--Clause-yellow.svg)](https://github.com/c-h-david/currnt/blob/main/LICENSE)
+[![License (3-Clause BSD)]
+(https://img.shields.io/badge/license-BSD%203--Clause-yellow.svg)]
+(https://github.com/c-h-david/currnt/blob/main/LICENSE)
 
-[![Docker Images](https://img.shields.io/badge/docker-images-blue?logo=docker)](https://hub.docker.com/r/chdavid/currnt/tags)
+[![Docker Images]
+(https://img.shields.io/badge/docker-images-blue?logo=docker)]
+(https://hub.docker.com/r/chdavid/currnt/tags)
 
-The Combined Utilities for River Routing Nested Together (CURRNT) is designed to
-simplify the execution of the Routing Application for Parallel computatIon of
-Discharge (RAPID) and the Reproducible Routing Rituals (RRR) on Amazon Web
+The Combined Utilities for River Routing Nested Together (CURRNT) is designed
+to simplify the execution of the Routing Application for Parallel computatIon
+of Discharge (RAPID) and the Reproducible Routing Rituals (RRR) on Amazon Web
 Services (AWS).
 
 ## Local execution
@@ -45,9 +49,10 @@ docker run -e EARTHDATA_USERNAME="yourEarthDataUserName" \
 
 > The `--rm` option deletes the container after execution. The `-p 9000:8080`
 > option maps Transmission Control Protocol (TCP) ports. In this case, the
-> `8080` port in the Docker container is mapped to the `9000` port in the Docker
-> host. Also, if one of your environmental variables has a special character,
-> consider using the `\` escape character before the special character.
+> `8080` port in the Docker container is mapped to the `9000` port in the
+> Docker host. Also, if one of your environmental variables has a special
+> character,> consider using the `\` escape character before the special
+> character.
 
 Try it out:
 
