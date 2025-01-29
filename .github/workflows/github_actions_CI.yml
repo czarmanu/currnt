@@ -84,7 +84,8 @@ jobs:
       - name: Install Python requirements
         run: |
           pip3 install --no-cache-dir -r requirements.pip
-          pip3 install mypy types-boto3 types-PyYAML types-requests types-setuptools types-protobuf
+          pip3 install mypy types-boto3 types-PyYAML types-requests
+          pip3 install mypy types-setuptools types-protobuf
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # Run tests
