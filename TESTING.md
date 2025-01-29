@@ -47,7 +47,7 @@ done
 We use `flake8` to lint our python files.
 
 ```bash
-flake8 src/*.py
+flake8 *.py src/*.py drv/*.py
 ```
 
 > The maximum line width is 79 characters by default.
@@ -57,7 +57,7 @@ flake8 src/*.py
 We use `mypy` to dynamic typing and static typing.
 
 ```bash
-mypy --strict src/*.py
+mypy --strict *.py src/*.py drv/*.py
 ```
 
 [URL_CFG_MD]: https://github.com/c-h-david/rapid2/blob/main/.pymarkdown.yml
