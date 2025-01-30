@@ -4,6 +4,8 @@
 
 [![Docker Images][BDG_DOC]][TAG_DOC]
 
+[![Docker Images][BDG_ZEN]][URL_ZEN]
+
 The Combined Utilities for River Routing Nested Together (CURRNT) is designed
 to simplify the execution of the Routing Application for Parallel computatIon
 of Discharge (RAPID) and the Reproducible Routing Rituals (RRR) on Amazon Web
@@ -60,5 +62,8 @@ curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" \
 
 [BDG_BSD3]: https://img.shields.io/badge/license-BSD%203--Clause-yellow.svg
 [BDG_DOC]: https://img.shields.io/badge/docker-images-blue?logo=docker
+[BDG_ZEN]: https://zenodo.org/badge/DOI/10.5281/zenodo.14206902.svg
 [URL_LICENS]: https://github.com/c-h-david/currnt/blob/main/LICENSE
 [TAG_DOC]: https://hub.docker.com/r/chdavid/currnt/tags
+[URL_ZEN]: https://doi.org/10.5281/zenodo.14206902
+
