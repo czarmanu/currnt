@@ -1,12 +1,8 @@
 # CURRNT
 
-[![License (3-Clause BSD)]
-(https://img.shields.io/badge/license-BSD%203--Clause-yellow.svg)]
-(https://github.com/c-h-david/currnt/blob/main/LICENSE)
+[![License (3-Clause BSD)][BDG_BSD3]][URL_LICENS]
 
-[![Docker Images]
-(https://img.shields.io/badge/docker-images-blue?logo=docker)]
-(https://hub.docker.com/r/chdavid/currnt/tags)
+[![Docker Images][BDG_DOC]][TAG_DOC]
 
 The Combined Utilities for River Routing Nested Together (CURRNT) is designed
 to simplify the execution of the Routing Application for Parallel computatIon
@@ -61,3 +57,8 @@ curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" \
      --data-raw '{"basin_id":"74", "lsm_mod":"VIC",
                   "s3_name":"currnt-data", "yyyy_mm":"2000-01"}'
 ```
+
+[BDG_BSD3]: https://img.shields.io/badge/license-BSD%203--Clause-yellow.svg
+[BDG_DOC]: https://img.shields.io/badge/docker-images-blue?logo=docker
+[URL_LICENS]: https://github.com/c-h-david/currnt/blob/main/LICENSE
+[TAG_DOC]: https://hub.docker.com/r/chdavid/currnt/tags
