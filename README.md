@@ -72,7 +72,7 @@ curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" \
 [URL_ZEN]: https://doi.org/10.5281/zenodo.14206902
 
 <!-- pyml disable-num-lines 20 line-length-->
-[BDG_CI]: https://github.com/c-h-david/currnt/actions/workflows/github_actions_CI.yml/badge.svg
-[BDG_CD]: https://github.com/c-h-david/currnt/actions/workflows/github_actions_CD.yml/badge.svg
-[URL_CI]: https://github.com/c-h-david/currnt/actions/workflows/github_actions_CI.yml
-[URL_CD]: https://github.com/c-h-david/currnt/actions/workflows/github_actions_CD.yml
+[BDG_CI]: https://github.com/czarmanu/currnt/actions/workflows/github_actions_CI.yml/badge.svg
+[BDG_CD]: https://github.com/czarmanu/currnt/actions/workflows/github_actions_CD.yml/badge.svg
+[URL_CI]: https://github.com/czarmanu/currnt/actions/workflows/github_actions_CI.yml
+[URL_CD]: https://github.com/czarmanu/currnt/actions/workflows/github_actions_CD.yml
