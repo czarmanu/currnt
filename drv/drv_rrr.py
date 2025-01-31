@@ -4,9 +4,9 @@
 # *****************************************************************************
 
 # Purpose:
-# Python driver for rrr
+# Python driver for running RRR on AWS cloud using lambda service
 # Authors:
-# Manu Tom, Cedric H. David, 2018-2024
+# Manu Tom, Cedric H. David, 2023-2025
 
 
 # *****************************************************************************
@@ -24,7 +24,6 @@ def drv_del_folder(folder_path):
     """
     Deletes all contents of the specified folder, including files and
     subdirectories.
-
     Parameters:
     folder_path (str): Path to the folder whose contents are to be deleted.
     """
@@ -51,29 +50,56 @@ def drv_del_folder(folder_path):
 
 
 # *****************************************************************************
+# Driver for checking if file exists in S3
+# *****************************************************************************
+def drv_s3_file_exists(s3_bucket_name, s3_key):
+    """
+    Check if a file exists in the S3 bucket.
+    Parameters:
+    s3_bucket_name (str): Name of the S3 bucket.
+    s3_key (str): Key (path) of the file in S3.
+    Returns:
+    bool: True if the file exists, False otherwise.
+    """
+    s3_client = boto3.client('s3')
+    try:
+        s3_client.head_object(Bucket=s3_bucket_name, Key=s3_key)
+        print(f"File found in S3: {s3_key}")
+        return True
+    except s3_client.exceptions.ClientError as e:
+        if e.response['Error']['Code'] == "404":
+            print(f"File not found in S3: {s3_key}")
+        else:
+            print(f"Error checking file in S3: {e}")
+        return False
+
+
+# *****************************************************************************
 # Driver for uploading from /tmp to s3 bucket
 # *****************************************************************************
 def drv_upl_S3(s3_bucket_name, f_upld, basin_id, lsm_exp, lsm_mod, lsm_stp,
-               yyyy_mm):
+               yyyy_mm, file_label):
     s3_res = boto3.resource('s3')
     s3_client = boto3.client('s3')
-
     try:
         # Extract filename from file path
         fn_upld = os.path.basename(f_upld)
-
         # Define the S3 key with subfolders
-        s3_key = "pfaf_{}/{}/{}/{}/{}/{}".format(basin_id, lsm_exp, lsm_mod,
-                                                 lsm_stp, yyyy_mm, fn_upld)
-
+        if file_label == 'm3':
+            s3_key = "pfaf_{}/{}/{}/{}/{}/{}".format(basin_id, lsm_exp,
+                                                     lsm_mod, lsm_stp,
+                                                     yyyy_mm, fn_upld)
+        elif file_label == 'LDAS':
+            s3_key = "{}/{}/{}/{}/{}".format(lsm_exp, lsm_mod, lsm_stp,
+                                             yyyy_mm, fn_upld)
+        else:
+            print('unknown file label')
         # Upload the file to S3 bucket
         s3_res.Bucket(s3_bucket_name).upload_file(f_upld, s3_key)
         print("File uploaded to S3:", s3_key)
-
         # Verify file size
         local_file_size = os.path.getsize(f_upld)
         s3_file_size = get_s3_file_size(s3_client, s3_bucket_name, s3_key)
-
         if local_file_size == s3_file_size:
             print("File sizes match, upload successful.")
             return True
@@ -81,7 +107,6 @@ def drv_upl_S3(s3_bucket_name, f_upld, basin_id, lsm_exp, lsm_mod, lsm_stp,
             print(f"File size mismatch: local file size = {local_file_size}\
                   bytes, S3 file size = {s3_file_size} bytes")
             return False
-
     except Exception as e:
         print(f"Error uploading file to S3: {e}")
         return False
