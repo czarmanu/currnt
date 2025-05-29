@@ -19,8 +19,8 @@ log_file_path = os.path.abspath(os.path.join(os.path.dirname(__file__),
 logging.basicConfig(filename=log_file_path, level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
 # Define the start and end years
-start_year = 1981
-end_year = 1981
+start_year = 1980
+end_year = 1980
 # Months to process
 months = ["01", "02", "03", "04", "05", "06",
           "07", "08", "09", "10", "11", "12"]
@@ -148,6 +148,7 @@ try:
             for lsm_mod in lsm_mods:
                 for lsm_stp in lsm_stps:
                     for year in range(start_year, end_year + 1):
+                        t_start = time.time()
                         for month in months:
                             if year == 1979:
                                 process_files(
@@ -192,6 +193,12 @@ try:
                                         basin_id, year, month, lsm_exp,
                                         lsm_mod, lsm_stp
                                     )
+                        t_end = time.time()
+                        total_runtime = t_end - t_start
+                        print(
+                            f"[Profiling] Total RunTime: "
+                            f"{total_runtime:.2f} seconds"
+                            )
 except TokenExpiredException as e:
     logging.error(str(e))
     print(str(e))

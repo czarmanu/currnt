@@ -33,6 +33,8 @@ import os
 import shutil
 import json
 import boto3
+import time
+import resource
 import rrr_drv_MERIT_Hydro_v07_Basins_v01_GLDAS_v20 as rrr_drv
 import drv_rrr as rrr_io_drv
 
@@ -47,6 +49,10 @@ otpt_fldr = "/tmp/"
 # lambda_handler
 # *****************************************************************************
 def lambda_handler(event, context):
+    t_start = time.time()
+    ed_dwnld_runtime = 0.0
+    ns_lsm_runtime = 0.0
+    ns_vol_runtime = 0.0
     print(event)
     for record in event['Records']:
         sqs_body = record['body']
@@ -83,12 +89,18 @@ def lambda_handler(event, context):
                 # *************************************************************
                 # driver: download
                 # *************************************************************
+                t_ed_dwnld_start = time.time()
                 rrr_drv.drv_dwn(rrr)
+                t_ed_dwnld_end = time.time()
+                ed_dwnld_runtime = t_ed_dwnld_end - t_ed_dwnld_start
                 print("Download driver: done")
                 # *************************************************************
                 # driver: lsm
                 # *************************************************************
+                t_ns_lsm_start = time.time()
                 rrr_drv.drv_lsm(rrr)
+                t_ns_lsm_end = time.time()
+                ns_lsm_runtime = t_ns_lsm_end - t_ns_lsm_start
                 print("LSM driver: done")
                 # Upload ldas files (3H) to S3
                 if os.path.exists(ldas_fldr):
@@ -131,8 +143,11 @@ def lambda_handler(event, context):
             shutil.copy(con_csv, otpt_fldr)
             shutil.copy(crd_csv, otpt_fldr)
             shutil.copy(cpl_csv, otpt_fldr)
+            t_ns_vol_start = time.time()
             rrr_drv.drv_vol(rrr)
             print("Volume driver: done")
+            t_ns_vol_end = time.time()
+            ns_vol_runtime = t_ns_vol_end - t_ns_vol_start
             # *****************************************************************
             # Define file paths and upload to S3 bucket
             # *****************************************************************
@@ -141,7 +156,6 @@ def lambda_handler(event, context):
                 f"{lsm_stp}_{yyyy_mm}_utc.nc4"
                 )
             ldas_file = f'/tmp/{lsm_exp}_{lsm_mod}_{lsm_stp}_{yyyy_mm}_utc.nc4'
-            files_to_upload = [(m3_file, 'm3'), (ldas_file, 'LDAS')]
             # Upload files
             files_to_upload = [(m3_file, 'm3'), (ldas_file, 'LDAS')]
             for file_path, label in files_to_upload:
@@ -164,7 +178,36 @@ def lambda_handler(event, context):
                         f"{label} file not found at {file_path}, "
                         "skipping upload."
                         )
-    return {'status': 'Success', 'message': message}
+    t_end = time.time()
+    total_runtime = t_end - t_start
+    max_mem_mb = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss/1024
+    print(
+        f"[Profiling] Total RunTime: "
+        f"{total_runtime:.2f} seconds"
+        )
+    print(
+        f"[Profiling] Earthdata download RunTime: "
+        f"{ed_dwnld_runtime:.2f} seconds"
+        )
+    print(
+        f"[Profiling] Numerical Simulation (LSM driver) Time: "
+        f"{ns_lsm_runtime:.2f} seconds"
+        )
+    print(
+        f"[Profiling] Numerical Simulation (Volume driver) Time: "
+        f"{ns_vol_runtime:.2f} seconds"
+        )
+    print(f"[Profiling] Max Memory Usage: {max_mem_mb:.2f} MB")
+    return {
+        'status': 'Success',
+        'profiling': {
+            'runtime_total_sec': total_runtime,
+            'runtime_ed_dwnld_sec': ed_dwnld_runtime,
+            'runtime_ns_lsm_sec': ns_lsm_runtime,
+            'runtime_ns_vol_sec': ns_vol_runtime,
+            'memory_max_MB': max_mem_mb
+        }
+    }
 
 
 # *****************************************************************************

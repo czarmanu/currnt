@@ -26,6 +26,8 @@ import subprocess
 import os
 import shutil
 import json
+import time
+import resource
 import drv_rapid as rapid_io_drv
 import drv_MERIT_Hydro_v07_Basins_v01_GLDAS_v20 as rapid_drv
 
@@ -34,10 +36,10 @@ import drv_MERIT_Hydro_v07_Basins_v01_GLDAS_v20 as rapid_drv
 # lambda_handler
 # *****************************************************************************
 def lambda_handler(event, context):
+    ns_runtime = 0.0
+    t_start = time.time()
     rapid_io_drv.suppress_debug_logging()  # Suppress debug messages
-
     print("received event: ", event)
-
     for record in event['Records']:
         sqs_body = record['body']
         # Split the body content into individual JSON objects
@@ -115,8 +117,10 @@ def lambda_handler(event, context):
                                                 lsm_stp, yyyy_mm))
 
             # Run RAPID
+            t_ns_start = time.time()
             rapid_drv.drv_run(rapid)
-
+            t_ns_end = time.time()
+            ns_runtime = t_ns_end - t_ns_start
             result_filegen_check = subprocess.run(["ls", "-lR", '/tmp'],
                                                   capture_output=True,
                                                   text=True)
@@ -191,8 +195,20 @@ def lambda_handler(event, context):
             message = ' {} using m3 input from s3 bucket\
                 {} and uploaded Qout to s3 bucket {}!'.format(
                 basin_id, s3_name, s3_name)
-
-    return {'Ran RAPID for': message}
+    t_end = time.time()
+    total_runtime = t_end - t_start
+    max_mem_mb = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024
+    print(f"[Profiling] Total RunTime: {total_runtime:.2f} seconds")
+    print(f"[Profiling] Numerical Simulation Time: {ns_runtime:.2f} seconds")
+    print(f"[Profiling] Max Memory Usage: {max_mem_mb:.2f} MB")
+    return {
+        'status': 'Success',
+        'profiling': {
+            'runtime_total_sec': total_runtime,
+            'runtime_ns_sec': ns_runtime,
+            'memory_max_MB': max_mem_mb
+            }
+        }
 
 # *****************************************************************************
 # End
