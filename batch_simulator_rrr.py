@@ -14,7 +14,7 @@ import time
 
 # Define the start and end years
 start_year = 1980
-end_year = 2004
+end_year = 1980
 # Define the months to process
 months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11",
           "12"]
@@ -24,6 +24,8 @@ lsm_exps = ["GLDAS"]
 basin_ids = ["74"]
 # Define the S3 bucket name
 bucket_name = "currnt-data"
+# Architecture ("x86_64", "arm64")
+arch = "arm64"
 # Set up logging
 logging.basicConfig(filename='logs_rrr_simulations.txt', level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
@@ -50,13 +52,21 @@ def s3_file_exists(s3_file_path):
 # *****************************************************************************
 def send_message(basin_id, lsm_exp, lsm_mod, lsm_stp, bucket_name,
                  year, month):
+    # Select API Gateway based on architecture
+    if arch == "x86_64":
+        api_id = "qs4oqdywqc"
+    elif arch == "arm64":
+        api_id = "elsqd6gtu1"
+    else:
+        raise ValueError(f"Unsupported architecture: {arch}")
+
     command = (
         f"awscurl --region us-west-2 --service execute-api --profile saml-pub "
         f"--data '{{\"messageGroupId\": \"default-group\"}}' -X POST "
         f"-d '{{\"basin_id\":\"{basin_id}\", \"lsm_exp\":\"{lsm_exp}\", "
         f"\"lsm_mod\":\"{lsm_mod}\", \"lsm_stp\":\"{lsm_stp}\", "
         f"\"s3_name\":\"{bucket_name}\", \"yyyy_mm\":\"{year}-{month}\"}}' "
-        f"\"https://qs4oqdywqc.execute-api.us-west-2.amazonaws.com/"
+        f"\"https://{api_id}.execute-api.us-west-2.amazonaws.com/"
         f"dev/processes/dx1822/execution/sqs-post\""
         )
     process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE,

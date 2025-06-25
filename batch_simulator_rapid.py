@@ -31,6 +31,8 @@ lsm_stps = ["3H"]
 basin_ids = ["74"]
 # AWS S3 bucket name
 bucket_name = "currnt-data"
+# Architecture ("x86_64", "arm64")
+arch = "x86_64"
 # Time to wait between retries (in seconds)
 retry_interval = 10
 
@@ -79,6 +81,15 @@ def process_files(basin_id, year, month, lsm_exp, lsm_mod, lsm_stp):
             )
         logging.info(message)
         print(message)
+
+        # Select API Gateway based on architecture
+        if arch == "x86_64":
+            api_id = "89uomm6sf8"
+        elif arch == "arm64":
+            api_id = "ppmkq1erca"
+        else:
+            raise ValueError(f"Unsupported architecture: {arch}")
+
         command = (
             "awscurl --region us-west-2 --service execute-api "
             "--profile saml-pub -X POST "
@@ -88,7 +99,7 @@ def process_files(basin_id, year, month, lsm_exp, lsm_mod, lsm_stp):
             f"\"lsm_stp\":\"{lsm_stp}\", "
             f"\"s3_name\":\"{bucket_name}\", "
             f"\"yyyy_mm\":\"{year}-{month}\"}}' "
-            "https://89uomm6sf8.execute-api.us-west-2.amazonaws.com/"
+            f"https://{api_id}.execute-api.us-west-2.amazonaws.com/"
             "dev/processes/dx1822/execution/sqs-post"
             )
         process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE,
