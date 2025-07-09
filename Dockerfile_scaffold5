@@ -1,12 +1,12 @@
 #*******************************************************************************
-#Dockerfile_app5
+#Dockerfile_scaffold5
 #*******************************************************************************
 
 #Purpose:
-#This file describes all the commands needed to assemble an image for app5 and
-#is used by the Docker software.
+#This file describes all the commands needed to assemble an image for scaffold5
+#and is used by the Docker software.
 #Author:
-#Manu Tom, Cedric H. David, 2018-2024
+#Manu Tom, Cedric H. David, 2018-2025
 
 
 #*******************************************************************************
@@ -28,7 +28,7 @@ RUN apt-get -y update && \
 #Python requirements
 #*******************************************************************************
 RUN pip3 install --no-cache-dir awslambdaric==3.0.0 earthaccess==0.11.0 && \
-    pip3 install --no-cache-dir boto3==1.35.82
+    pip3 install --no-cache-dir boto3
 
 
 #*******************************************************************************
@@ -50,8 +50,8 @@ COPY entry_script.sh /entry_script.sh
 #*******************************************************************************
 #Copy files into Docker image
 #*******************************************************************************
-COPY src/lambda_function_app5.py ${LAMBDA_TASK_ROOT}
-COPY drv/drv_app5.py ${LAMBDA_TASK_ROOT}
+COPY src/lambda_function_scaffold5.py ${LAMBDA_TASK_ROOT}
+COPY drv/drv_scaffold5.py ${LAMBDA_TASK_ROOT}
 
 
 #*******************************************************************************
@@ -63,7 +63,7 @@ ENTRYPOINT [ "/entry_script.sh" ]
 #*******************************************************************************
 #Default parameters, can be overridden from Docker CLI when container running
 #*******************************************************************************
-CMD [ "lambda_function_app5.lambda_handler" ]
+CMD [ "lambda_function_scaffold5.lambda_handler" ]
 
 
 #*******************************************************************************

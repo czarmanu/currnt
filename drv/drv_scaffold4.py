@@ -1,13 +1,12 @@
 # !/usr/bin/env python3
 # *****************************************************************************
-# drv_app5.py
+# drv_scaffold4.py
 # *****************************************************************************
 
 # Purpose:
 # Python drivers to
-# 1) Download a file (GLDAS_VIC_3H) to /tmp using Earthaccess library.
-# 2) Upload the file from /tmp to s3 bucket.
-# 3) Download the file back from s3 bucket to /tmp
+# 1) Download a file (GLDAS_VIC_3H) using Earthaccess library.
+# 2) Upload the file to s3 bucket.
 # Authors:
 # Manu Tom, Cedric H. David, 2023-2025
 
@@ -19,13 +18,6 @@ import os
 import earthaccess
 import subprocess
 import boto3
-
-
-# *****************************************************************************
-# Driver for printing a message
-# *****************************************************************************
-def drv_hel(message):
-    print("message ", message)
 
 
 # *****************************************************************************
@@ -82,31 +74,6 @@ def drv_upl_S3(s3_bucket_name, f_upld):
     # *************************************************************************
     s3_res.Bucket(s3_bucket_name).upload_file(f_upld, fn_upld)
     print("File uploaded to S3")
-
-
-# *****************************************************************************
-# Driver for downloading from s3 bucket to /tmp
-# *****************************************************************************
-def drv_dwn_S3(s3_bucket_name, file):
-    s3_res = boto3.resource('s3')
-    # ************************************************************************
-    # extract filename from file
-    # ************************************************************************
-    # e.g. /tmp/GLDAS_VIC10_3H.A20020101.0000.021.nc4 to
-    # GLDAS_VIC10_3H.A20020101.0000.021.nc4
-    fn = file.split('/')[-1]
-    file_new = file.replace('GLDAS', 're_dwnld_GLDAS')
-    # ************************************************************************
-    # download from s3 bucket
-    # ************************************************************************
-    s3_res.Bucket(s3_bucket_name).download_file(fn, file_new)
-    print("File downloaded back from S3")
-    # ************************************************************************
-    # check downloaded file
-    # ************************************************************************
-    result_chk_dwnld = subprocess.run(["ls", "-lR", "/tmp"],
-                                      capture_output=True, text=True)
-    print("Checking download folder contents:\n", result_chk_dwnld.stdout)
 
 
 # *****************************************************************************
