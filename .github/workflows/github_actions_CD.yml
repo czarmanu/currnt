@@ -38,14 +38,14 @@ jobs:
     strategy:
       matrix:
         include:
-          - app: "app0"
-          - app: "app1"
-          - app: "app2"
-          - app: "app3"
-          - app: "app4"
-          - app: "app5"
-          - app: "rrr"
-          - app: "rapid"
+          - scaffold: "scaffold0"
+          - scaffold: "scaffold1"
+          - scaffold: "scaffold2"
+          - scaffold: "scaffold3"
+          - scaffold: "scaffold4"
+          - scaffold: "scaffold5"
+          - scaffold: "rrr"
+          - scaffold: "rapid"
     steps:
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -97,11 +97,11 @@ jobs:
         with:
           push: true
           platforms: linux/amd64,linux/arm64
-          file: Dockerfile_${{ matrix.app }}
+          file: Dockerfile_${{ matrix.scaffold }}
           tags: |
             ${{ github.ref_name != 'main' && format('{0}/currnt:{1}-{2}',
-              secrets.DOCKER_HUB_NAME, matrix.app, github.ref_name) || null }}
-            ${{ secrets.DOCKER_HUB_NAME }}/currnt:${{ matrix.app }}-latest
+              secrets.DOCKER_HUB_NAME, matrix.scaffold, github.ref_name) || null }}
+            ${{ secrets.DOCKER_HUB_NAME }}/currnt:${{ matrix.scaffold }}-latest
 
 
 # *****************************************************************************
