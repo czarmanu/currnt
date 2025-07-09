@@ -1,10 +1,9 @@
-# *****************************************************************************
-# lambda_function_app3.py
+# ******************************************************************************
+# lambda_function_scaffold2.py
 # *****************************************************************************
 
 # Purpose:
-# Use a python driver and download files from Earthdata
-# to /tmp/ using credentials.
+# Basic usage of a python driver to print basin ID.
 # Authors:
 # Manu Tom, Cedric H. David, 2023-2025
 
@@ -23,23 +22,21 @@
 # *****************************************************************************
 # Import libraries
 # *****************************************************************************
-import drv_app3 as drv
+import drv_scaffold2 as drv
 
 
 # *****************************************************************************
 # lambda handler
 # *****************************************************************************
 def lambda_handler(event, context):
-    yyyy_mm = event['yyyy_mm']
+    message = event['basin_id']
     # *************************************************************************
     # invoke driver
     # *************************************************************************
-    filename = drv.drv_dwn_ED(yyyy_mm)
-    message = 'Dowloaded file: {}'.format(filename)
+    drv.drv_hel(message)
     return {
-        'Success: ': message
+        'message': message
     }
-
 
 # *****************************************************************************
 # End

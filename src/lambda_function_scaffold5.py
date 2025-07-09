@@ -1,9 +1,12 @@
-# ******************************************************************************
-# lambda_function_app2.py
+# *****************************************************************************
+# lambda_function_scaffold5.py
 # *****************************************************************************
 
 # Purpose:
-# Basic usage of a python driver to print basin ID.
+# Use a python driver to:
+# 1) download a file to /tmp/ using Earthaccess library (uisng credentials))
+# 2) upload the same file to s3 bucket using s3 credentials.
+# 3) download the same file from s3 bucket to /tmp folder.
 # Authors:
 # Manu Tom, Cedric H. David, 2023-2025
 
@@ -22,21 +25,29 @@
 # *****************************************************************************
 # Import libraries
 # *****************************************************************************
-import drv_app2 as drv
+import drv_scaffold5 as drv
 
 
 # *****************************************************************************
 # lambda handler
 # *****************************************************************************
 def lambda_handler(event, context):
-    message = event['basin_id']
+    yyyy_mm = event['yyyy_mm']
+    s3_bucket_name = event['s3_name']
     # *************************************************************************
-    # invoke driver
+    # invoke drivers
     # *************************************************************************
-    drv.drv_hel(message)
+    file = drv.drv_dwn_ED(yyyy_mm)
+    drv.drv_upl_S3(s3_bucket_name, file)
+    drv.drv_dwn_S3(s3_bucket_name, file)
+    message = (
+        'Downloaded the file from {} as {}, uploaded it to the S3 bucket {}, '
+        'and re-downloaded it'.format(yyyy_mm, file, s3_bucket_name)
+        )
     return {
-        'message': message
+        'Success: ': message
     }
+
 
 # *****************************************************************************
 # End
