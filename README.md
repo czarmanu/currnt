@@ -32,21 +32,21 @@ cd currnt/
 Create Docker image:
 
 ```bash
-docker build -t chdavid/currnt:app0-latest -f Dockerfile_app0 .
+docker build -t chdavid/currnt:scaffold0-latest -f Dockerfile_scaffold0 .
 ```
 
 Execute Docker image as a Docker container:
 
 ```bash
-docker run --rm -p 9000:8080 chdavid/currnt:app0-latest
+docker run --rm -p 9000:8080 chdavid/currnt:scaffold0-latest
 docker run -e EARTHDATA_USERNAME="yourEarthDataUserName" \
            -e EARTHDATA_PASSWORD="yourEarthDataPassword" \
-           --rm -p 9000:8080 chdavid/currnt:app3-latest
+           --rm -p 9000:8080 chdavid/currnt:scaffold3-latest
 docker run -e EARTHDATA_USERNAME="yourEarthDataUserName" \
            -e EARTHDATA_PASSWORD="yourEarthDataPassword" \
            -e AWS_ACCESS_KEY_ID="yourKeyID" \
            -e AWS_SECRET_ACCESS_KEY="yourSecretAccessKey" \
-           --rm -p 9000:8080 chdavid/currnt:app4-latest
+           --rm -p 9000:8080 chdavid/currnt:scaffold4-latest
 ```
 
 > The `--rm` option deletes the container after execution. The `-p 9000:8080`
