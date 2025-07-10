@@ -100,7 +100,8 @@ jobs:
           file: Dockerfile_${{ matrix.scaffold }}
           tags: |
             ${{ github.ref_name != 'main' && format('{0}/currnt:{1}-{2}',
-              secrets.DOCKER_HUB_NAME, matrix.scaffold, github.ref_name) || null }}
+              secrets.DOCKER_HUB_NAME, matrix.scaffold,
+              github.ref_name) || null }}
             ${{ secrets.DOCKER_HUB_NAME }}/currnt:${{ matrix.scaffold }}-latest
 
 
